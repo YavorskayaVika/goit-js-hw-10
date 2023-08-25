@@ -1,48 +1,47 @@
-import { fetchBreeds,fetchCatBreed} from './cat-api.js';
+import { fetchBreeds, fetchCatByBreed } from './cat-api.js';
 import SlimSelect from 'slim-select';
 import 'slim-select/dist/slimselect.css';
 import Notiflix from 'notiflix';
 
-
 const refs = {
-    selectBreed:document.querySelector('.bread-select'),
-    loader:document.querySelector('.loader'),
-    error:document.quarySelector('.error'),
-    catInfo:document.quarySelector('.cat-info'),
+  selectBreed: document.querySelector('.breed-select'),
+  loader: document.querySelector('.loader'),
+  error: document.querySelector('.error'),
+  catInfo: document.querySelector('.cat-info'),
 };
 
-refs.selectBreed.addEventListener('change',onSelectChange);
-refs.loader.addEventListener('loader');
+refs.selectBreed.addEventListener('change', onSelectChange);
+
+refs.loader.classList.add('loader');
 refs.selectBreed.classList.add('visually-hidden');
 refs.error.classList.add('visually-hidden');
 
 fetchBreeds()
-.then(data =>{
-  const dataMar = selectMar(data)  
-  new SlimSelect({
-    select:refs.selectBreed,
-    data:dataMar,
+  .then(data => {
+    const dataMarkup = selectMarkUp(data);
+    new SlimSelect({
+      select: refs.selectBreed,
+      data: dataMarkup,
+    });
+    setTimeout(() => {
+      refs.selectBreed.classList.remove('visually-hidden');
+    }, 1000);
   })
-  setTimeout(( ) => {
- refs.selectBreed.classList.remove('visually-hidden');
-  },1000);
-})
-
-.catch(error=>{
-    errorShow()
-})
-.finally(( )=>{
+  .catch(error => {
+    errorShow();
+  })
+  .finally(() => {
     refs.loader.classList.replace('loader', 'visually-hidden');
-})
+  });
 
-function selectMar(arr) {
-  const markUp = arr  
-  .map(
-    ({ name, reference_image_id }) =>
-      `<option value="${reference_image_id}">${name}</option>`
-  )
-  .join('');
-  return refs.selectBreed.insertAdjacentHTML('beforeend,markUp')
+function selectMarkUp(arr) {
+  const markUp = arr
+    .map(
+      ({ name, reference_image_id }) =>
+        `<option value="${reference_image_id}">${name}</option>`
+    )
+    .join('');
+  return refs.selectBreed.insertAdjacentHTML('beforeend', markUp);
 }
 
 function onSelectChange() {
