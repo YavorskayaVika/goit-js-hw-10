@@ -23,7 +23,7 @@ fetchBreeds()
       select: refs.selectBreed,
       data: dataMarkup,
     });
-    
+    refs.selectBreed.classList.remove('visually-hidden');
   })
   .catch(error => {
     errorShow();
